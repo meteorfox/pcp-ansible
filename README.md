@@ -1,4 +1,4 @@
-Role Name
+pcp-ansible
 =========
 
 Installs Performance-Copilot (PCP) on Debian/Ubuntu servers
