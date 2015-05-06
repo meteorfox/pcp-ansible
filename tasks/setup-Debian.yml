@@ -1,0 +1,10 @@
+---
+- name: Ensure dependencies are installed.
+  apt: pkg=curl state=installed
+
+- name: Ensure PCP is installed
+  apt: pkg=pcp state=installed
+
+- name: Ensure pcpwebd is installed
+  apt: pkg=pcp-webapi
+  when: pcp_install_webapi

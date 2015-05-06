@@ -1,0 +1,44 @@
+---
+# Variable setup.
+- name: Ensure Ubuntu Distro is supported
+  get_url:
+    url: "https://dl.bintray.com/netflixoss/ubuntu/dists/{{ ansible_distribution_release }}/Release"
+    dest: /dev/null
+  register: distrosupported
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Ensure Debian Distro is supported
+  get_url:
+    url: "https://dl.bintray.com/netflixoss/debian/dists/{{ ansible_distribution_release }}/Release"
+    dest: /dev/null
+  register: distrosupported
+  when: ansible_distribution == 'Debian'
+
+- name: Add PCP apt repo keys
+  apt_key:
+    url: "https://bintray.com/user/downloadSubjectPublicKey?username=netflixoss"
+    state: present
+
+- name: Add PCP Apt Sources list ubuntu
+  apt_repository:
+    repo: "deb https://dl.bintray.com/netflixoss/ubuntu {{ ansible_distribution_release}} main"
+    state: present
+    update_cache: yes
+  when: distrosupported|success and ansible_distribution == 'Ubuntu'
+
+- name: Add PCP Apt Sources list debian
+  apt_repository:
+    repo: "deb https://dl.bintray.com/netflixoss/debian {{ ansible_distribution_release}} main"
+    state: present
+    update_cache: yes
+  when: distrosupported|success and ansible_distribution == 'Debian'
+
+- include: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure pmcd is started and runs on startup
+  service: name=pmcd state=started enabled=yes
+
+- name: Ensure pmwebd is started and runs on startup
+  service: name=pmwebd state=started enabled=yes
+  when: pcp_install_webapi
