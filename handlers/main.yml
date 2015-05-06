@@ -1,2 +1,3 @@
 ---
-# handlers file for pcp-ansible
+- name: restart pmwebd
+  service: name=pmwebd state=restarted

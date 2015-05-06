@@ -42,3 +42,14 @@
 - name: Ensure pmwebd is started and runs on startup
   service: name=pmwebd state=started enabled=yes
   when: pcp_install_webapi
+
+- name: Copy pmwebd options in place
+  template:
+    src: pmwebd.options.j2
+    dest: /etc/pcp/pmwebd/pmwebd.options
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart pmwebd
+  when: pcp_install_webapi
+

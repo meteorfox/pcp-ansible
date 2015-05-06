@@ -1,2 +1,3 @@
 ---
 pcp_install_webapi: true
+pcp_webapi_request_timeout: 1

@@ -17,6 +17,11 @@ Available variables are listed below, along with defaults values (see vars/main.
 
 By default, this role will also install and start the pmwebd daemon.
 
+`pcp_webapi_request_timeout: 1`
+
+Timeout in seconds for the request between the pmwebd daemon and the pmcd daemon.
+
+
 Dependencies
 ------------
 
