@@ -2,33 +2,33 @@
 # Variable setup.
 - name: Ensure Ubuntu Distro is supported
   get_url:
-    url: "https://dl.bintray.com/netflixoss/ubuntu/dists/{{ ansible_distribution_release }}/Release"
+    url: "https://dl.bintray.com/pcp/ubuntu/dists/{{ ansible_distribution_release }}/Release"
     dest: /dev/null
   register: distrosupported
   when: ansible_distribution == 'Ubuntu'
 
 - name: Ensure Debian Distro is supported
   get_url:
-    url: "https://dl.bintray.com/netflixoss/debian/dists/{{ ansible_distribution_release }}/Release"
+    url: "https://dl.bintray.com/pcp/debian/dists/{{ ansible_distribution_release }}/Release"
     dest: /dev/null
   register: distrosupported
   when: ansible_distribution == 'Debian'
 
 - name: Add PCP apt repo keys
   apt_key:
-    url: "https://bintray.com/user/downloadSubjectPublicKey?username=netflixoss"
+    url: "https://bintray.com/user/downloadSubjectPublicKey?username=pcp"
     state: present
 
 - name: Add PCP Apt Sources list ubuntu
   apt_repository:
-    repo: "deb https://dl.bintray.com/netflixoss/ubuntu {{ ansible_distribution_release}} main"
+    repo: "deb https://dl.bintray.com/pcp/ubuntu {{ ansible_distribution_release}} main"
     state: present
     update_cache: yes
   when: distrosupported|success and ansible_distribution == 'Ubuntu'
 
 - name: Add PCP Apt Sources list debian
   apt_repository:
-    repo: "deb https://dl.bintray.com/netflixoss/debian {{ ansible_distribution_release}} main"
+    repo: "deb https://dl.bintray.com/pcp/debian {{ ansible_distribution_release}} main"
     state: present
     update_cache: yes
   when: distrosupported|success and ansible_distribution == 'Debian'
