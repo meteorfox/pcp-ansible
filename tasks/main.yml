@@ -2,7 +2,7 @@
 # Variable setup.
 - name: Ensure Ubuntu Distro is supported
   get_url:
-    url: "https://dl.bintray.com/pcp/ubuntu/dists/{{ ansible_distribution_release }}/Release"
+    url: "https://dl.bintray.com/pcp/trusty/dists/{{ ansible_distribution_release }}/Release"
     dest: /dev/null
   register: distrosupported
   when: ansible_distribution == 'Ubuntu'
@@ -15,20 +15,23 @@
   when: ansible_distribution == 'Debian'
 
 - name: Add PCP apt repo keys
+  sudo: True
   apt_key:
     url: "https://bintray.com/user/downloadSubjectPublicKey?username=pcp"
     state: present
 
 - name: Add PCP Apt Sources list ubuntu
+  sudo: True
   apt_repository:
-    repo: "deb https://dl.bintray.com/pcp/ubuntu {{ ansible_distribution_release}} main"
+    repo: "deb https://dl.bintray.com/pcp/trusty {{ ansible_distribution_release }} main"
     state: present
     update_cache: yes
   when: distrosupported|success and ansible_distribution == 'Ubuntu'
 
 - name: Add PCP Apt Sources list debian
+  sudo: True
   apt_repository:
-    repo: "deb https://dl.bintray.com/pcp/debian {{ ansible_distribution_release}} main"
+    repo: "deb https://dl.bintray.com/pcp/debian {{ ansible_distribution_release }} main"
     state: present
     update_cache: yes
   when: distrosupported|success and ansible_distribution == 'Debian'
@@ -37,13 +40,20 @@
   when: ansible_os_family == 'Debian'
 
 - name: Ensure pmcd is started and runs on startup
-  service: name=pmcd state=started enabled=yes
+  service:
+    name: pmcd
+    state: started
+    enabled: yes
 
 - name: Ensure pmwebd is started and runs on startup
-  service: name=pmwebd state=started enabled=yes
+  service:
+    name: pmwebd
+    state: started
+    enabled: yes
   when: pcp_install_webapi
 
 - name: Copy pmwebd options in place
+  sudo: True
   template:
     src: pmwebd.options.j2
     dest: /etc/pcp/pmwebd/pmwebd.options

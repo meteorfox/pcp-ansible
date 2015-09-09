@@ -1,3 +1,5 @@
 ---
 - name: restart pmwebd
-  service: name=pmwebd state=restarted
+  service:
+    name: pmwebd
+    state: restarted

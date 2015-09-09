@@ -1,10 +1,18 @@
 ---
 - name: Ensure dependencies are installed.
-  apt: pkg=curl state=installed
+  sudo: True
+  apt:
+    pkg: curl
+    state: installed
 
 - name: Ensure PCP is installed
-  apt: pkg=pcp state=installed
+  sudo: True
+  apt:
+    pkg: pcp
+    state: installed
 
 - name: Ensure pcpwebd is installed
-  apt: pkg=pcp-webapi
+  sudo: True
+  apt:
+    pkg: pcp-webapi
   when: pcp_install_webapi
